@@ -17,7 +17,6 @@ NGINX_DEFAULT="/etc/nginx/sites-enabled/default"
 log "Setting up Nginx"
 
 require_command apt-get
-require_command nginx
 require_command curl
 
 if [[ ! -f "$SOURCE_CONFIG" ]]; then
@@ -68,10 +67,10 @@ if ! systemctl is-active --quiet nginx; then
     die "Nginx is not running"
 fi
 
-log "Testing application through Nginx"
+log "Testing application through HTTPS"
 
-if ! curl -fsS http://127.0.0.1/health >/dev/null; then
-    die "Nginx health check failed"
+if ! curl -kfsS https://127.0.0.1/health >/dev/null; then
+    die "Nginx HTTPS health check failed"
 fi
 
 log "Nginx configured successfully"

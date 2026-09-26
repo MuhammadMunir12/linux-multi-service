@@ -33,6 +33,13 @@ if ! ufw status | grep -q "Status: active"; then
     else
         log "HTTP rule already exists"
     fi
+    log "Ensuring HTTPS rule exists"
+    
+    if ! ufw status | grep -qE '443/tcp[[:space:]]+ALLOW'; then
+        ufw allow 443/tcp
+    else
+        log "HTTPS rule already exists"
+    fi
 
     log "Enabling UFW"
 

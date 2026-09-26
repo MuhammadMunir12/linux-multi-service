@@ -36,15 +36,21 @@ else
     die "Backend is not listening on 127.0.0.1:3000"
 fi
 
-if ss -ltn | grep -qE '0.0.0.0:80|\\[::\\]:80'; then
+if ss -ltn | grep -qE '0.0.0.0:80|\[::\]:80'; then
     log "Nginx is listening on port 80"
 else
     die "Nginx is not listening on port 80"
 fi
 
+if ss -ltn | grep -qE '0.0.0.0:443|\[::\]:443'; then
+    log "Nginx is listening on port 443"
+else
+    die "Nginx is not listening on port 443"
+fi
+
 log "Checking application health"
 
-HEALTH_RESPONSE="$(curl -fsS http://127.0.0.1/health)"
+HEALTH_RESPONSE="$(curl -kfsS https://127.0.0.1/health)"
 
 if echo "$HEALTH_RESPONSE" | grep -q '"status":"healthy"'; then
     log "Application health check passed"
@@ -79,6 +85,12 @@ if ufw status | grep -qE '80/tcp[[:space:]]+ALLOW'; then
     log "HTTP firewall rule is present"
 else
     die "HTTP firewall rule is missing"
+fi
+
+if ufw status | grep -qE '443/tcp[[:space:]]+ALLOW'; then
+    log "HTTPS firewall rule is present"
+else
+    die "HTTPS firewall rule is missing"
 fi
 
 log "Checking fail2ban jails"

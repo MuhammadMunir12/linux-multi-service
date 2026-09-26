@@ -1,0 +1,1 @@
+*/5 * * * * root /home/munir/linux-multi-service/scripts/monitor.sh >/dev/null 2>&1
