@@ -1,0 +1,16 @@
+[Unit]
+Description=Linux Multi-Service Web Application
+After=network.target
+
+[Service]
+Type=simple
+User=webapp
+Group=webapp
+WorkingDirectory=/opt/webapp/app
+ExecStart=/opt/webapp/venv/bin/python /opt/webapp/app/app.py
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
